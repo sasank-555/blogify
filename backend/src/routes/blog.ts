@@ -21,38 +21,46 @@ blogRouter.post("/", async (c) => {
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
   const body = await c.req.json();
-  const post = await prisma.post.create({
-    data: {
-      title: body.title,
-      content: body.content,
-      authorId: userId,
-    },
-  });
+  try {
+    const post = await prisma.post.create({
+      data: {
+        title: body.title,
+        content: body.content,
+        authorId: userId,
+      },
+    });
 
-  return c.json({
-    id: post.id,
-  });
+    return c.json({
+      id: post.id,
+    });
+  } catch (error) {
+    c.status(403);
+  }
 });
 
 blogRouter.put("/", async (c) => {
   const userId = c.get("userId");
+  console.log(userId);
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
-  await prisma.post.update({
-    where: {
-      id: body.id,
-      authorId: userId,
-    },
-    data: {
-      title: body.title,
-      content: body.content,
-    },
-  });
-
-  return c.text("updated post");
+  try {
+    await prisma.post.update({
+      where: {
+        id: body.id,
+        authorId: userId,
+      },
+      data: {
+        title: body.title,
+        content: body.content,
+      },
+    });
+    return c.text("updated post");
+  } catch (error) {
+    c.status(403);
+  }
 });
 blogRouter.get("/bulk", async (c) => {
   console.log("HEllo");

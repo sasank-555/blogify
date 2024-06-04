@@ -10,12 +10,12 @@ export const blogMiddleware = createMiddleware(async (c, next) => {
   }
   const token = header?.split(" ")[1];
 
-  const decoded = await verify(token, c.env.JWT_SECRET);
-  if (decoded.id) {
+  try {
+    const decoded = await verify(token, c.env.JWT_SECRET);
     c.set("userId", decoded.id);
     console.log(c.req.path);
     await next();
-  } else {
+  } catch (error) {
     c.status(403);
     c.json({ error: "unauthorized" });
   }
