@@ -13,7 +13,7 @@ export const blogRouter = new Hono<{
   };
 }>();
 
-blogRouter.use(blogMiddleware);
+blogRouter.use("/*", blogMiddleware);
 blogRouter.post("/", async (c) => {
   const userId = c.get("userId");
   console.log("userId :" + userId);
@@ -54,22 +54,8 @@ blogRouter.put("/", async (c) => {
 
   return c.text("updated post");
 });
-
-blogRouter.get("/:id", async (c) => {
-  const id = c.req.param("id");
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env?.DATABASE_URL,
-  }).$extends(withAccelerate());
-  const post = await prisma.post.findUnique({
-    where: {
-      id: id,
-    },
-  });
-
-  return c.json(post);
-});
-
 blogRouter.get("/bulk", async (c) => {
+  console.log("HEllo");
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
   }).$extends(withAccelerate());
@@ -81,5 +67,25 @@ blogRouter.get("/bulk", async (c) => {
   } catch (error) {
     c.status(403);
     return c.json({ message: "Error fetching blogs" });
+  }
+});
+
+blogRouter.get("/:id", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  try {
+    const blogId = c.req.param("id");
+    const blog = await prisma.post.findFirst({
+      where: {
+        id: blogId,
+      },
+    });
+    c.status(200);
+    return c.json({ blog });
+  } catch (error) {
+    c.status(403);
+    return c.json({ message: "Error fetching blog" });
   }
 });
