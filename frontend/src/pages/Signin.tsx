@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
-import { BACKEND_URL } from "../../config";
+
 export default function Signin() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
