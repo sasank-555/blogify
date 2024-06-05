@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import { verify } from "hono/jwt";
 export const blogMiddleware = createMiddleware(async (c, next) => {
-  const header = c.req.header("authorization") || "";
+  const header = c.req.header("Authorization") || "";
   const check = header.startsWith("Bearer");
   if (!check) {
     return c.json({
