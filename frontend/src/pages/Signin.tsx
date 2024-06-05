@@ -21,7 +21,7 @@ export default function Signin() {
   const submitHandler = async () => {
     try {
       const response = await axios.post(
-        `"https://backend.sasanknasika555.workers.dev/api/v1/user/signup"`,
+        `"https://backend.sasanknasika555.workers.dev/api/v1/user/signin"`,
         formData
       );
 
@@ -29,7 +29,7 @@ export default function Signin() {
       localStorage.setItem("token", token);
       navigate("/blogs");
     } catch (e) {
-      alert("Error while signing up");
+      alert("Error while signing in");
     }
   };
   return (
@@ -43,7 +43,7 @@ export default function Signin() {
               Create your account to get started.{" "}
             </p>
           </div>
-          <form className="space-y-4">
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -74,7 +74,7 @@ export default function Signin() {
                 Already Registered?
               </Link>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
